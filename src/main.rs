@@ -53,7 +53,7 @@ impl Plugin {
             .map(|(i, tab)| PluginSearchResult {
                 id: i as u32,
                 name: tab.title.clone(),
-                description: "firefox tab".into(),
+                description: String::from("Firefox Tab"),
                 ..Default::default()
             })
             .map(PluginResponse::Append);
