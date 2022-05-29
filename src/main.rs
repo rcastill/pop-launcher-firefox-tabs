@@ -1,4 +1,4 @@
-use firefox_rs::{list_tabs, FFResult};
+use firefox_rs::{list_tabs, FFResult, Tab};
 use futures_lite::{AsyncWriteExt, StreamExt};
 use pop_launcher::{
     async_stdin, async_stdout, json_input_stream, PluginResponse, PluginSearchResult, Request,
@@ -39,17 +39,20 @@ impl Responder {
 }
 
 #[derive(Default)]
-struct Plugin {}
+struct Plugin {
+    tabs: Vec<Tab>,
+}
 
 impl Plugin {
     async fn search(&mut self, _query: &str, responder: &mut Responder) -> FFResult<()> {
-        let tabs = list_tabs()?;
-        let results = tabs
-            .into_iter()
+        self.tabs = list_tabs()?;
+        let results = self
+            .tabs
+            .iter()
             .enumerate()
             .map(|(i, tab)| PluginSearchResult {
                 id: i as u32,
-                name: tab.title,
+                name: tab.title.clone(),
                 description: "firefox tab".into(),
                 ..Default::default()
             })
@@ -68,6 +71,14 @@ impl Plugin {
         responder.send(PluginResponse::Finished).await;
         Ok(())
     }
+
+    async fn activate(&self, i: u32, responder: &mut Responder) -> FFResult<()> {
+        if let Some(tab) = self.tabs.get(i as usize) {
+            tab.focus()?;
+            responder.send(PluginResponse::Close).await;
+        }
+        Ok(())
+    }
 }
 
 #[tokio::main(flavor = "current_thread")]
@@ -84,6 +95,10 @@ async fn main() {
             Request::Search(query) => trycont!(
                 plugin.search(&query, &mut responder).await,
                 "Failed to search: {}"
+            ),
+            Request::Activate(i) => trycont!(
+                plugin.activate(i, &mut responder).await,
+                "Failed to activate: {}"
             ),
             Request::Exit => break,
             other => log::debug!("Unsupported request: {other:?}"),
