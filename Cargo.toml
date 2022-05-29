@@ -14,4 +14,3 @@ serde_json = "1"
 blocking = "1"
 futures-lite = "1"
 firefox-rs = { path = "../firefox-rs" }
-anyhow = "1"
