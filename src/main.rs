@@ -44,8 +44,27 @@ struct Plugin {
 }
 
 impl Plugin {
-    async fn search(&mut self, _query: &str, responder: &mut Responder) -> FFResult<()> {
-        self.tabs = list_tabs()?;
+    async fn search(&mut self, query: &str, responder: &mut Responder) -> FFResult<()> {
+        let tabs = list_tabs()?;
+        let query = query.to_ascii_lowercase();
+        self.tabs = tabs
+            .into_iter()
+            .filter(|tab| {
+                let title_lower = tab.title.to_ascii_lowercase();
+                let mut title_tokens = title_lower.split_ascii_whitespace();
+                let found_in_title = query
+                    .split_ascii_whitespace()
+                    .all(|token| title_tokens.any(|title_token| title_token.contains(token)));
+                if found_in_title {
+                    return true;
+                }
+                let url = tab.url.to_ascii_lowercase();
+                let mut url_tokens = url.split("/");
+                query
+                    .split_ascii_whitespace()
+                    .all(|token| url_tokens.any(|url_token| url_token.contains(token)))
+            })
+            .collect();
         let results = self
             .tabs
             .iter()

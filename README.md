@@ -11,7 +11,7 @@ Plugin that lists firefox tabs in [pop os launcher](https://github.com/pop-os/la
 
 ## TODO
 
-- [ ] Proper search implementation
+- [x] Improve search implementation (1st iteration)
 - [ ] Favicon as item icon?
 - [ ] Installation script
 - [ ] Publish firefox-rs and this plugin
