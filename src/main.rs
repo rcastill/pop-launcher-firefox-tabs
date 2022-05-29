@@ -1,7 +1,8 @@
 use firefox_rs::{list_tabs, FFResult, Tab};
 use futures_lite::{AsyncWriteExt, StreamExt};
 use pop_launcher::{
-    async_stdin, async_stdout, json_input_stream, PluginResponse, PluginSearchResult, Request,
+    async_stdin, async_stdout, json_input_stream, IconSource, PluginResponse, PluginSearchResult,
+    Request,
 };
 use std::io::Stdout;
 
@@ -73,6 +74,10 @@ impl Plugin {
                 id: i as u32,
                 name: tab.title.clone(),
                 description: String::from("Firefox Tab"),
+                icon: tab
+                    .icon
+                    .as_ref()
+                    .map(|ico| IconSource::Mime(ico.clone().into())),
                 ..Default::default()
             })
             .map(PluginResponse::Append);
