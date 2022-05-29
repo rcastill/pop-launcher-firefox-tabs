@@ -60,14 +60,6 @@ impl Plugin {
         for search in results {
             responder.send(search).await;
         }
-        // let search = PluginSearchResult {
-        //     id: 0,
-        //     name: "huachimingo".into(),
-        //     description: "test".into(),
-        //     ..Default::default()
-        // };
-        // let res = PluginResponse::Append(search);
-        // responder.send(res).await;
         responder.send(PluginResponse::Finished).await;
         Ok(())
     }
