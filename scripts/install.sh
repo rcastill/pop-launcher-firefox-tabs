@@ -60,5 +60,5 @@ mv -v ${tmp_dir}/* $install_dir
 # redirect to extension installing
 ext_url=https://addons.mozilla.org/en-US/firefox/addon/focus_tab/
 >&2 echo Remember to install focusTab $ext_url
-read -p "Install extension? [y/N] " goto_ext
+read -p "Install extension? [y/N] " goto_ext <&1
 if [ "${goto_ext}" = "y" ]; then firefox $ext_url; fi
