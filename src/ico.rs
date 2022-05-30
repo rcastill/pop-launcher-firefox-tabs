@@ -1,4 +1,4 @@
-use std::{borrow::Cow, collections::HashMap, env::temp_dir, path::PathBuf};
+use std::{borrow::Cow, env::temp_dir, path::PathBuf};
 
 use pop_launcher::IconSource;
 use sha2::{Digest, Sha256};
@@ -26,10 +26,11 @@ fn genpath(content: &str) -> PathBuf {
 pub struct Cache;
 
 impl Cache {
-    pub async fn load(&mut self, content: &str) -> Result<IconSource, &'static str> {
+    pub async fn load(&self, content: &str) -> Result<IconSource, &'static str> {
         let path = genpath(content);
         let as_name = || IconSource::Name(Cow::Owned(path.to_string_lossy().into_owned()));
         if path.exists() {
+            log::trace!("Loading favico from cache: {path:?}");
             return Ok(as_name());
         }
         let b64 = load_ico_b64(content).ok_or("Unexpected icon format")?;
@@ -45,6 +46,7 @@ impl Cache {
         f.write_all(&svg)
             .await
             .map_err(|_e| "Failed to write to new image source")?;
+        log::trace!("Saved favico: {path:?}");
         Ok(as_name())
     }
 }

@@ -1,8 +1,10 @@
+mod ico;
+
 use firefox_rs::{list_tabs, FFResult, Tab};
+use futures::future::join_all;
 use futures_lite::{AsyncWriteExt, StreamExt};
 use pop_launcher::{
-    async_stdin, async_stdout, json_input_stream, IconSource, PluginResponse, PluginSearchResult,
-    Request,
+    async_stdin, async_stdout, json_input_stream, PluginResponse, PluginSearchResult, Request,
 };
 use std::io::Stdout;
 
@@ -42,6 +44,7 @@ impl Responder {
 #[derive(Default)]
 struct Plugin {
     tabs: Vec<Tab>,
+    icocache: ico::Cache,
 }
 
 impl Plugin {
@@ -66,18 +69,38 @@ impl Plugin {
                     .all(|token| url_tokens.any(|url_token| url_token.contains(token)))
             })
             .collect();
+
+        // define async tasks to load icons
+        let icotasks = self.tabs.iter().map(|tab| async {
+            // for each tab, if it has an icon
+            // try to load it
+            match &tab.icon {
+                // this will use cached loading
+                Some(ico) => Some(self.icocache.load(ico).await),
+                None => None,
+            }
+            // then if it exists; convert Result to Option
+            .and_then(|res| {
+                res.map_err(|e| {
+                    let title = &tab.title;
+                    log::error!("Failed to load icon for {title}: {e}");
+                })
+                .ok()
+            })
+        });
+        // execute icon loading
+        let icos = join_all(icotasks).await;
+
         let results = self
             .tabs
             .iter()
+            .zip(icos)
             .enumerate()
-            .map(|(i, tab)| PluginSearchResult {
+            .map(|(i, (tab, icon))| PluginSearchResult {
                 id: i as u32,
                 name: tab.title.clone(),
                 description: String::from("Firefox Tab"),
-                icon: tab
-                    .icon
-                    .as_ref()
-                    .map(|ico| IconSource::Mime(ico.clone().into())),
+                icon,
                 ..Default::default()
             })
             .map(PluginResponse::Append);
@@ -99,6 +122,16 @@ impl Plugin {
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
+    #[cfg(feature = "journald")]
+    {
+        systemd_journal_logger::init().expect("Failed to initialize journald backend");
+        // enable log level debug if on debug compilation
+        debug_assert!({
+            log::set_max_level(log::LevelFilter::Debug);
+            true
+        });
+    }
+
     let mut requests = json_input_stream(async_stdin());
 
     let mut plugin = Plugin::default();
