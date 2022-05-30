@@ -1,12 +1,15 @@
 # Firefox Tabs Pop Launcher Plugin
 
-**DISCLAIMER**: Work in Progress
-
 Plugin that lists firefox tabs in [pop os launcher](https://github.com/pop-os/launcher).
 
 ## Installation
 
+Execute the following command in your terminal:
+
+**What is this?** This will automatically download the plugin and install it under `$HOME/.local/share/pop-launcher/plugins/firefox-tabs`. You can inspect the installation script [here](https://github.com/rcastill/pop-launcher-firefox-tabs/blob/master/scripts/install.sh).
+
 ```console
+curl --proto '=https' -sSf https://raw.githubusercontent.com/rcastill/pop-launcher-firefox-tabs/master/scripts/install.sh | bash
 ```
 
 Or if you prefer, you can do the same the script does, **manually**:
