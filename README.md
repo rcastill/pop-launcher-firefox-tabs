@@ -10,7 +10,7 @@ https://user-images.githubusercontent.com/8534987/170946002-a22634e0-7658-4ab7-9
 
 ## Installation
 
-First, you have to install firefox extension [focusTab](https://addons.mozilla.org/en-US/firefox/addon/focus_tab/) for this plugin to be able to focus on the selected task. See [Limitations](#limitations).
+First, you have to install firefox extension [focusTab](https://addons.mozilla.org/en-US/firefox/addon/focus_tab/) for this plugin to be able to focus on the selected tab. See [Limitations](#limitations).
 
 Then execute the following command in your terminal:
 
