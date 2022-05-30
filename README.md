@@ -2,6 +2,12 @@
 
 Plugin that lists firefox tabs in [pop os launcher](https://github.com/pop-os/launcher).
 
+
+
+https://user-images.githubusercontent.com/8534987/170946002-a22634e0-7658-4ab7-97ea-6411a82adb39.mp4
+
+
+
 ## Installation
 
 Execute the following command in your terminal:
