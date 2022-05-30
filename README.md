@@ -14,7 +14,7 @@ First, you have to install firefox extension [focusTab](https://addons.mozilla.o
 
 Then execute the following command in your terminal:
 
-**What is this?** This will automatically download the plugin and install it under `$HOME/.local/share/pop-launcher/plugins/firefox-tabs`. You can inspect the installation script [here](https://github.com/rcastill/pop-launcher-firefox-tabs/blob/master/scripts/install.sh).
+> **What is this?** This will automatically download the plugin and install it under `$HOME/.local/share/pop-launcher/plugins/firefox-tabs`. You can inspect the installation script [here](https://github.com/rcastill/pop-launcher-firefox-tabs/blob/master/scripts/install.sh).
 
 ```console
 curl --proto '=https' -sSf https://raw.githubusercontent.com/rcastill/pop-launcher-firefox-tabs/master/scripts/install.sh | bash
