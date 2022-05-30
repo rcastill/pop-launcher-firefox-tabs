@@ -232,6 +232,8 @@ dependencies = [
 [[package]]
 name = "firefox-rs"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43b9ba320927b300bc8ee0a3018874081c3ecc6e2b418a576e7e40fe03bad183"
 dependencies = [
  "dirs",
  "lz4_flex",
