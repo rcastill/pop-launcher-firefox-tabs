@@ -10,7 +10,9 @@ https://user-images.githubusercontent.com/8534987/170946002-a22634e0-7658-4ab7-9
 
 ## Installation
 
-Execute the following command in your terminal:
+First, you have to install firefox extension [focusTab](https://addons.mozilla.org/en-US/firefox/addon/focus_tab/) for this plugin to be able to focus on the selectedd task. See [Limitations](limitations).
+
+Then execute the following command in your terminal:
 
 **What is this?** This will automatically download the plugin and install it under `$HOME/.local/share/pop-launcher/plugins/firefox-tabs`. You can inspect the installation script [here](https://github.com/rcastill/pop-launcher-firefox-tabs/blob/master/scripts/install.sh).
 
