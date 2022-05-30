@@ -55,3 +55,10 @@ install_dir="$HOME/.local/share/pop-launcher/plugins/firefox-tabs"
 mkdir -p $install_dir
 mv -v ${tmp_dir}/* $install_dir
 >&2 echo "INFO: Done"
+>&2 echo
+
+# redirect to extension installing
+ext_url=https://addons.mozilla.org/en-US/firefox/addon/focus_tab/
+>&2 echo Remember to install focusTab $ext_url
+read -p "Install extension? [y/N] " goto_ext
+if [ "${goto_ext}" = "y" ]; then firefox $ext_url; fi
