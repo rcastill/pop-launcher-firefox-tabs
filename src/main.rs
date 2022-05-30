@@ -107,7 +107,6 @@ impl Plugin {
         for search in results {
             responder.send(search).await;
         }
-        responder.send(PluginResponse::Finished).await;
         Ok(())
     }
 
@@ -141,10 +140,12 @@ async fn main() {
     while let Some(request_res) = requests.next().await {
         let request = trycont!(request_res, "Failed to parse request: {}");
         match request {
-            Request::Search(query) => trycont!(
-                plugin.search(&query, &mut responder).await,
-                "Failed to search: {}"
-            ),
+            Request::Search(query) => {
+                if let Err(e) = plugin.search(&query, &mut responder).await {
+                    log::error!("Failed to search: {e}");
+                }
+                responder.send(PluginResponse::Finished).await
+            }
             Request::Activate(i) => trycont!(
                 plugin.activate(i, &mut responder).await,
                 "Failed to activate: {}"
